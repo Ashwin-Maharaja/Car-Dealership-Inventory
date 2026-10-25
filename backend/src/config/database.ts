@@ -41,13 +41,13 @@ export class SQLiteDatabase {
     const stmt = this.raw.prepare(sql);
     return {
       get: (...params: unknown[]): T | undefined => {
-        return stmt.get(...params) as T | undefined;
+        return (stmt.get as any)(...params) as T | undefined;
       },
       all: (...params: unknown[]): T[] => {
-        return stmt.all(...params) as T[];
+        return (stmt.all as any)(...params) as T[];
       },
       run: (...params: unknown[]): RunResult => {
-        const res = stmt.run(...params);
+        const res = (stmt.run as any)(...params);
         return {
           changes: res.changes,
           lastInsertRowid: Number(res.lastInsertRowid),

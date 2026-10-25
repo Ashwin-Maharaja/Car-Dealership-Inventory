@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/client';
 import StatsCard from '../components/StatsCard';
+import VehicleCard from '../components/VehicleCard';
 import SaleModal from '../components/SaleModal';
-import type { DashboardStats, Sale } from '../types';
+import type { DashboardStats, Sale, Vehicle } from '../types';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [isSaleModalOpen, setIsSaleModalOpen] = useState(false);
@@ -15,8 +17,15 @@ export default function DashboardPage() {
     setIsLoading(true);
     setError('');
     try {
-      const response = await apiClient.get<DashboardStats>('/dashboard/stats');
-      setStats(response.data);
+      const [statsRes, vehiclesRes] = await Promise.all([
+        apiClient.get<DashboardStats>('/dashboard/stats'),
+        apiClient.get<{ vehicles?: Vehicle[]; data?: Vehicle[] }>('/vehicles', {
+          params: { status: 'available', limit: 6 },
+        }),
+      ]);
+      setStats(statsRes.data);
+      const vList = vehiclesRes.data.vehicles || vehiclesRes.data.data || [];
+      setAvailableVehicles(Array.isArray(vList) ? vList : []);
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
@@ -102,6 +111,37 @@ export default function DashboardPage() {
           />
         </div>
       ) : null}
+
+      {/* Available Vehicles Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">Available Vehicles in Stock</h2>
+            <p className="text-xs text-gray-500">Live inventory ready for instant customer purchase</p>
+          </div>
+          <Link to="/vehicles" className="text-xs font-semibold text-blue-600 hover:text-blue-700">
+            View full inventory catalog ({stats?.totalVehicles ?? 0}) →
+          </Link>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="card h-72 animate-pulse bg-gray-100" />
+            ))}
+          </div>
+        ) : availableVehicles.length > 0 ? (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {availableVehicles.map((vehicle) => (
+              <VehicleCard key={vehicle.id} vehicle={vehicle} onUpdate={fetchStats} />
+            ))}
+          </div>
+        ) : (
+          <div className="card p-8 text-center text-gray-500">
+            No vehicles currently in stock.
+          </div>
+        )}
+      </div>
 
       {/* Main Content Sections */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

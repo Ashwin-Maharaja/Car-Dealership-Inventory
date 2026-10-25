@@ -24,19 +24,7 @@ Set up this skeleton
 
 ---
 
-### Prompt 2: Session Continuation & Resilience Recovery
-
-```text
-Continue the above work
-```
-
-**Context & Activity:**
-- Resolved subagent task states and completed full frontend and backend source code scaffold.
-- Implemented modular Express router, JWT authentication middleware, SQLite persistent database schema with foreign key constraints and WAL mode, React router pages, TailwindCSS design system components, and Axios API client.
-
----
-
-### Prompt 3: TDD Kata & Core Requirements Specification
+### Prompt 2: TDD Kata & Core Requirements Specification
 
 ```text
 Run against this set of requirements
@@ -105,4 +93,30 @@ The mandatory "My AI Usage" section.
 A test report showing the results of your test suite.
 A root PROMPTS.md containing your raw, unedited AI chat logs or public chat links (no AI-generated summaries).
 (Optional - Brownie Points) A link to the deployed, live application on a platform like Vercel, Netlify, Heroku, or AWS.
+```
+
+
+---
+
+### Prompt 4: Replace better-sqlite3 with Node 24 Compatible SQLite
+
+```text
+The project currently fails during npm install because better-sqlite3@11.10.0 cannot find a prebuilt binary for Node.js 24.22.1 and node-gyp is failing because the Visual Studio C++ toolset is missing.
+
+Do not try to solve this by changing my Visual Studio installation yet.
+
+First inspect the project and replace better-sqlite3 with a SQLite solution that is compatible with the current Node.js environment and does not require native compilation if possible.
+
+Requirements:
+- Continue using SQLite because the assignment requires a persistent database.
+- Preserve the existing database/API architecture as much as possible.
+- Update package.json and all affected imports/database code.
+- Remove better-sqlite3 completely.
+- Delete node_modules and package-lock.json only if necessary.
+- Reinstall dependencies.
+- Start the backend.
+- Run the existing tests.
+- Do not modify unrelated application functionality.
+
+Tell me exactly which files were changed and why.
 ```

@@ -85,7 +85,7 @@ car-dealership/
 | Layer | Technology |
 |---|---|
 | **Frontend** | React 18, Vite, TypeScript, TailwindCSS v3, React Router v6, Axios |
-| **Backend** | Node.js, Express, TypeScript, SQLite (`better-sqlite3`), JWT, bcryptjs |
+| **Backend** | Node.js, Express, TypeScript, SQLite (`node:sqlite`), JWT, bcryptjs |
 | **Testing** | Node.js Test Runner (`node:test`, `node:assert`), TSX |
 | **Tooling** | Git, npm / pnpm |
 

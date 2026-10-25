@@ -2,7 +2,7 @@ import type { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import type { AuthRequest, TokenPayload } from "../types/index.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
+const getJwtSecret = () => process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
 
 /**
  * Express middleware that verifies a JWT Bearer token from the Authorization header.
@@ -25,7 +25,7 @@ export function authMiddleware(req: AuthRequest, res: Response, next: NextFuncti
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
+    const decoded = jwt.verify(token, getJwtSecret()) as TokenPayload;
     req.user = decoded;
     next();
   } catch {

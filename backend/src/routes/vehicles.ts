@@ -455,7 +455,14 @@ router.post("/:id/purchase", (req: AuthRequest, res: Response): void => {
       ).run(newQty, newStatus, Number(id));
 
       // 2. Log sale transaction
-      const userId = req.user?.id || 1;
+      let userId = req.user?.id || 1;
+      const existingUser = db.prepare("SELECT id FROM users WHERE id = ?").get(userId) as { id: number } | undefined;
+      if (!existingUser) {
+        db.prepare(
+          "INSERT OR IGNORE INTO users (id, email, password_hash, name, role) VALUES (?, ?, ?, ?, ?)"
+        ).run(userId, req.user?.email || `user_${userId}@dealership.com`, "dummy_hash", "Buyer", "user");
+      }
+
       // Get or create dummy/default customer if needed
       let customer = db.prepare("SELECT id FROM customers LIMIT 1").get() as { id: number } | undefined;
       let customerId = customer?.id;

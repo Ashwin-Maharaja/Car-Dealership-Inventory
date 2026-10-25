@@ -33,10 +33,16 @@ app.use((_req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚗 Car Dealership API running on http://localhost:${PORT}`);
-  console.log(`   Health check: http://localhost:${PORT}/api/health`);
-});
+// Start server if not running in a test runner
+const isTestEnvironment =
+  process.env.NODE_ENV === "test" ||
+  process.argv.some((arg) => arg.includes("test"));
+
+if (!isTestEnvironment) {
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚗 Car Dealership API running on http://localhost:${PORT}`);
+    console.log(`   Health check: http://localhost:${PORT}/api/health`);
+  });
+}
 
 export default app;

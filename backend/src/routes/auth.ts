@@ -5,7 +5,7 @@ import db from "../config/database.js";
 import type { User, TokenPayload } from "../types/index.js";
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
+const getJwtSecret = () => process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
 const TOKEN_EXPIRY = "24h";
 
 /**
@@ -54,7 +54,7 @@ router.post("/register", (req: Request, res: Response): void => {
       role: userRole,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+    const token = jwt.sign(payload, getJwtSecret(), { expiresIn: TOKEN_EXPIRY });
 
     res.status(201).json({
       token,
@@ -107,7 +107,7 @@ router.post("/login", (req: Request, res: Response): void => {
       role: user.role,
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: TOKEN_EXPIRY });
+    const token = jwt.sign(payload, getJwtSecret(), { expiresIn: TOKEN_EXPIRY });
 
     res.json({
       token,

@@ -1,10 +1,12 @@
-import type Database from "better-sqlite3";
+export interface SchemaDatabase {
+  exec(sql: string): void;
+}
 
 /**
  * Initializes the database schema by creating all required tables
  * if they do not already exist.
  */
-export function initializeSchema(db: Database.Database): void {
+export function initializeSchema(db: SchemaDatabase): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

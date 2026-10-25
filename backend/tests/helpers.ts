@@ -1,9 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import app from "../src/index.js";
 import db from "../src/config/database.js";
 import jwt from "jsonwebtoken";
 import type { Server } from "node:http";
-
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
 
 export let testServer: Server;
 export let baseUrl = "";
@@ -31,7 +32,8 @@ export async function stopTestServer(): Promise<void> {
 }
 
 export function generateTestToken(user: { id: number; email: string; role: "admin" | "user" | "staff" }): string {
-  return jwt.sign(user, JWT_SECRET, { expiresIn: "1h" });
+  const secret = process.env.JWT_SECRET || "fallback-secret-do-not-use-in-prod";
+  return jwt.sign(user, secret, { expiresIn: "1h" });
 }
 
 export function resetDatabase(): void {

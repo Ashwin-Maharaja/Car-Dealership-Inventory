@@ -120,3 +120,15 @@ Requirements:
 
 Tell me exactly which files were changed and why.
 ```
+
+
+---
+
+### Prompt 5: Endpoint Not Found Resolution & Server Navigation
+
+```text
+{
+  "error": "Endpoint not found"
+}
+I am getting this for backend page
+```
